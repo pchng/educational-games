@@ -1,0 +1,26 @@
+# Local workspace and editor settings
+/.agents/
+/.codex/
+/.vscode/
+/.idea/
+
+# Local environment and credentials
+/.aws/
+.env
+.env.*
+.envrc
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local tooling and logs
+node_modules/
+.venv/
+__pycache__/
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini

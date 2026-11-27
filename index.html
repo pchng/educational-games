@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf8f0">
+  <meta name="description" content="Play learning games and collect stars in Wonder Patch.">
+  <title>Wonder Patch</title>
+  <link rel="icon" href="./assets/fox.webp" type="image/webp">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./game.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#games">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        Wonder Patch
+      </a>
+      <div class="star-bank">
+        <span class="star" aria-hidden="true">★</span>
+        <span id="star-count">0</span>
+        <span id="star-unit">stars</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="main">
+    <section id="games-screen" aria-labelledby="home-title">
+      <div class="hero">
+        <div class="hero-art" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <h1 id="home-title" tabindex="-1">Play, learn,<br><em>grow.</em></h1>
+          <p>Practice a new skill and earn stars as you go.</p>
+        </div>
+      </div>
+
+      <section class="game-library" aria-labelledby="library-title">
+        <h2 id="library-title">Pick a game</h2>
+        <ul class="game-grid">
+          <li class="game-card">
+            <a class="game-card-link" href="#addition" aria-labelledby="addition-action addition-title">
+              <div class="card-art">
+                <img src="./assets/addition.webp" alt="" width="960" height="480">
+              </div>
+              <div class="game-card-copy">
+                <h3 id="addition-title">Addition Adventure</h3>
+                <p>Add numbers from one to three digits.</p>
+                <span class="button button-primary" id="addition-action">Play game</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </section>
+
+    <section id="levels-screen" class="inner-screen" aria-labelledby="levels-title" hidden>
+      <a class="text-link" href="#games">All games</a>
+      <div class="level-intro">
+        <div>
+          <h1 id="levels-title" tabindex="-1">Addition<br>Adventure</h1>
+          <p>Pick a level to start adding.</p>
+        </div>
+        <img src="./assets/addition.webp" alt="" width="960" height="480">
+      </div>
+
+      <div class="level-grid">
+        <button class="level-card level-easy" type="button" data-level="easy">
+          <span class="level-art" aria-hidden="true"><span>6</span><span>7</span></span>
+          <span class="level-name">Easy</span>
+          <span class="level-description">One-digit numbers</span>
+          <span class="level-example">6 + 7</span>
+          <span class="level-action">Start</span>
+        </button>
+        <button class="level-card level-medium" type="button" data-level="medium">
+          <span class="level-art" aria-hidden="true"><span>13</span><span>18</span></span>
+          <span class="level-name">Medium</span>
+          <span class="level-description">Two-digit numbers</span>
+          <span class="level-example">13 + 18</span>
+          <span class="level-action">Start</span>
+        </button>
+        <button class="level-card level-hard" type="button" data-level="hard">
+          <span class="level-art" aria-hidden="true"><span>132</span><span>245</span></span>
+          <span class="level-name">Hard</span>
+          <span class="level-description">Three-digit numbers</span>
+          <span class="level-example">132 + 245</span>
+          <span class="level-action">Start</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="play-screen" class="inner-screen" aria-labelledby="play-title" hidden>
+      <a class="text-link" href="#addition">Pick a level</a>
+      <div class="play-heading">
+        <h1 id="play-title" tabindex="-1">Addition Adventure</h1>
+        <span class="level-tag" id="current-level"></span>
+      </div>
+
+      <div class="play-grid">
+        <div class="problem-card">
+          <div class="round-progress">
+            <span id="question-number"></span>
+            <div id="round-dots" class="round-dots" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+
+          <form id="answer-form" novalidate>
+            <label class="problem-label" for="answer">What is the sum?</label>
+            <div class="equation">
+              <span id="equation-text" tabindex="-1"></span>
+              <input id="answer" name="answer" type="text" inputmode="numeric" maxlength="4"
+                autocomplete="off" spellcheck="false" aria-describedby="equation-text">
+            </div>
+            <fieldset id="number-pad" class="number-pad">
+              <legend class="sr-only">Number buttons</legend>
+              <button type="button" data-digit="1">1</button>
+              <button type="button" data-digit="2">2</button>
+              <button type="button" data-digit="3">3</button>
+              <button type="button" data-digit="4">4</button>
+              <button type="button" data-digit="5">5</button>
+              <button type="button" data-digit="6">6</button>
+              <button type="button" data-digit="7">7</button>
+              <button type="button" data-digit="8">8</button>
+              <button type="button" data-digit="9">9</button>
+              <button type="button" class="zero-key" data-digit="0">0</button>
+              <button type="button" class="erase-key" id="erase" aria-label="Erase last digit">⌫</button>
+            </fieldset>
+            <div class="answer-actions">
+              <button type="button" class="button button-outline" id="hint-toggle" aria-expanded="false" aria-controls="hint-content">Show hint</button>
+              <button type="submit" class="button button-primary" id="check-answer">Check</button>
+              <button type="button" class="button button-primary" id="next-question" hidden>Next question</button>
+            </div>
+            <div class="hint" id="hint-content" hidden></div>
+          </form>
+        </div>
+
+        <aside class="cheer-card" id="cheer-card" aria-label="Game feedback">
+          <img class="cheer-picture" src="./assets/fox.webp" alt="" width="576" height="576">
+          <div class="confetti" aria-hidden="true"><span>★</span><span>✦</span><span>★</span><span>✦</span><span>★</span></div>
+          <div class="cheer-message" role="status" aria-atomic="true">
+            <strong id="feedback-title">You’ve got this!</strong>
+            <span id="feedback-text">Each correct answer earns a star.</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="result-screen" class="inner-screen result-screen" aria-labelledby="result-title" hidden>
+      <a class="text-link" href="#addition">Pick a level</a>
+      <div class="result-card">
+        <div class="result-art" aria-hidden="true"></div>
+        <div class="result-copy">
+          <div class="result-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <h1 id="result-title" tabindex="-1">You did it!</h1>
+          <p id="result-message"></p>
+          <div class="result-actions">
+            <button type="button" class="button button-primary" id="play-again">Play again</button>
+            <a class="button button-outline" href="#games">All games</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <noscript><p>Turn on JavaScript to play Addition Adventure.</p></noscript>
+  </main>
+
+  <footer class="wrap site-footer">
+    <span id="save-message">Progress is saved in this browser.</span>
+  </footer>
+</body>
+</html>
