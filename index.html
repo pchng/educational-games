@@ -112,16 +112,28 @@
           </div>
 
           <form id="answer-form" novalidate>
-            <label class="problem-label" for="answer">What is the sum?</label>
+            <p class="problem-label" id="answer-label">What is the sum?</p>
+            <p class="answer-instructions" id="answer-instructions">
+              Start with the ones box on the right. Leave the extra box on the left empty if you don’t need it.
+            </p>
             <div class="answer-entry">
               <div class="equation">
                 <div class="equation-addends" id="equation-addends" role="img" aria-labelledby="equation-text" tabindex="-1">
                   <span class="sr-only" id="equation-text"></span>
-                  <div id="top-addend" aria-hidden="true"></div>
-                  <div aria-hidden="true"><span class="addition-sign">+</span><span id="bottom-addend"></span></div>
+                  <div class="equation-row" id="top-addend" aria-hidden="true"></div>
+                  <div class="equation-row" id="bottom-addend" aria-hidden="true"></div>
                 </div>
-                <input id="answer" name="answer" type="text" inputmode="numeric" maxlength="4"
-                  autocomplete="off" spellcheck="false" aria-describedby="equation-text">
+                <div class="equation-row answer-fields" id="answer-fields" role="group"
+                  aria-labelledby="answer-label" aria-describedby="answer-instructions">
+                  <input class="answer-digit" type="text" inputmode="numeric" maxlength="1"
+                    aria-label="Ones" aria-describedby="equation-text" autocomplete="off">
+                  <input class="answer-digit" type="text" inputmode="numeric" maxlength="1"
+                    aria-label="Tens" autocomplete="off">
+                  <input class="answer-digit" type="text" inputmode="numeric" maxlength="1"
+                    aria-label="Hundreds" autocomplete="off" hidden>
+                  <input class="answer-digit" type="text" inputmode="numeric" maxlength="1"
+                    aria-label="Thousands" autocomplete="off" hidden>
+                </div>
               </div>
               <fieldset id="number-pad" class="number-pad">
                 <legend class="sr-only">Number buttons</legend>

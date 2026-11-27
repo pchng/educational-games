@@ -13,7 +13,9 @@ const screens = ["games", "levels", "play", "result"].map((name) => byId(name + 
 const levelButtons = [...document.querySelectorAll("[data-level]")];
 const progressDots = [...byId("round-dots").children];
 const equationAddends = byId("equation-addends");
-const answer = byId("answer");
+const answerFields = byId("answer-fields");
+const answerDigits = [...answerFields.querySelectorAll("input")];
+const touchPointer = window.matchMedia("(pointer: coarse)");
 const checkButton = byId("check-answer");
 const nextButton = byId("next-question");
 const hintButton = byId("hint-toggle");
@@ -28,6 +30,7 @@ const feedbackSounds = {
 
 let progress = loadProgress();
 let activeLevel = null;
+let activePlace = 0;
 let currentSound = null;
 
 function loadProgress() {
@@ -143,13 +146,14 @@ function updateStars() {
   byId("star-unit").textContent = unit;
 }
 
-function showScreen(name, focusHeading) {
+function showScreen(name, moveFocus, focusTarget) {
   for (const screen of screens) {
     screen.hidden = screen.id !== name + "-screen";
   }
-  if (focusHeading) {
+  if (moveFocus) {
     window.scrollTo(0, 0);
-    byId(name + "-screen").querySelector("h1").focus({ preventScroll: true });
+    const target = focusTarget ?? byId(name + "-screen").querySelector("h1");
+    target.focus({ preventScroll: true });
   }
 }
 
@@ -187,7 +191,53 @@ function renderRoute(focusHeading) {
   levelTag.textContent = levels[levelKey].name;
   levelTag.className = "level-tag level-" + levelKey;
   renderQuestion();
-  showScreen("play", focusHeading);
+  const firstDigit = !round.solved && !touchPointer.matches ? answerDigits[0] : null;
+  showScreen("play", focusHeading || firstDigit !== null, firstDigit);
+}
+
+function renderAddend(id, number, showPlus = false) {
+  const digits = [...String(number)].reverse().map((digit) => {
+    const cell = document.createElement("span");
+    cell.textContent = digit;
+    return cell;
+  });
+  if (showPlus) {
+    const plus = document.createElement("span");
+    plus.className = "addition-sign";
+    plus.textContent = "+";
+    digits.push(plus);
+  }
+  byId(id).replaceChildren(...digits);
+}
+
+function selectAnswerDigit(place, moveFocus = false) {
+  const digit = answerDigits[place];
+  if (!digit || digit.hidden) return;
+
+  answerDigits[activePlace].classList.remove("current-digit");
+  activePlace = place;
+  digit.classList.toggle("current-digit", !digit.readOnly);
+
+  if (moveFocus) {
+    if (document.activeElement === digit) digit.select();
+    else digit.focus({ preventScroll: true });
+  }
+}
+
+function enterAnswerDigit(place, value, moveFocus) {
+  answerDigits[place].value = value;
+  answerFields.removeAttribute("aria-invalid");
+  if (value) {
+    const nextPlace = answerDigits[place + 1]?.hidden === false ? place + 1 : place;
+    selectAnswerDigit(nextPlace, moveFocus);
+  }
+}
+
+function eraseAnswerDigit(place, moveFocus) {
+  if (!answerDigits[place].value && place > 0) place--;
+  answerDigits[place].value = "";
+  answerFields.removeAttribute("aria-invalid");
+  selectAnswerDigit(place, moveFocus);
 }
 
 function renderQuestion() {
@@ -201,11 +251,18 @@ function renderQuestion() {
     dot.classList.toggle("current", index === round.index && !round.solved);
   });
   byId("equation-text").textContent = left + " + " + right + " =";
-  byId("top-addend").textContent = left;
-  byId("bottom-addend").textContent = right;
-  answer.value = round.solved ? left + right : "";
-  answer.readOnly = round.solved;
-  answer.removeAttribute("aria-invalid");
+  renderAddend("top-addend", left);
+  renderAddend("bottom-addend", right, true);
+  const requiredPlaces = String(left).length;
+  const solvedDigits = round.solved ? [...String(left + right)].reverse() : [];
+  answerDigits.forEach((digit, place) => {
+    digit.hidden = place > requiredPlaces;
+    digit.value = solvedDigits[place] ?? "";
+    digit.readOnly = round.solved;
+    digit.classList.toggle("carry-digit", place === requiredPlaces);
+  });
+  answerFields.removeAttribute("aria-invalid");
+  selectAnswerDigit(0);
   numberPad.disabled = round.solved;
   checkButton.hidden = round.solved;
   nextButton.hidden = !round.solved;
@@ -275,17 +332,23 @@ function checkAnswer(event) {
   const round = progress.rounds[activeLevel];
   if (!round || round.solved || round.index >= roundLength) return;
 
-  if (answer.value.length === 0) {
-    setFeedback("What’s your answer?", "Type a number or tap the number buttons.");
+  const [left, right] = round.problems[round.index];
+  const requiredPlaces = String(left).length;
+  const missingPlace = answerDigits.findIndex((digit, place) => place < requiredPlaces && !digit.value);
+  const moveFocus = !touchPointer.matches || answerFields.contains(document.activeElement);
+  if (missingPlace !== -1) {
+    const column = answerDigits[missingPlace].getAttribute("aria-label").toLowerCase();
+    setFeedback("Keep going!", "Fill in the " + column + " box.");
+    selectAnswerDigit(missingPlace, moveFocus);
     return;
   }
 
-  const [left, right] = round.problems[round.index];
-  if (Number(answer.value) !== left + right) {
-    answer.value = "";
-    answer.setAttribute("aria-invalid", "true");
-    setFeedback("Try again!", "You can tap Show hint if you get stuck.", "try-again");
+  const total = answerDigits.reduce((sum, digit, place) => sum + Number(digit.value) * 10 ** place, 0);
+  if (total !== left + right) {
+    answerFields.setAttribute("aria-invalid", "true");
+    setFeedback("Try again!", "Check your digits or tap Show hint.", "try-again");
     playFeedbackSound("retry");
+    selectAnswerDigit(0, moveFocus);
     return;
   }
 
@@ -312,8 +375,8 @@ function nextQuestion() {
   } else {
     renderQuestion();
     equationAddends.scrollIntoView({ block: "nearest" });
-    if (window.matchMedia("(pointer: fine)").matches) {
-      answer.focus({ preventScroll: true });
+    if (!touchPointer.matches) {
+      selectAnswerDigit(0, true);
     } else {
       equationAddends.focus({ preventScroll: true });
     }
@@ -329,21 +392,50 @@ for (const button of levelButtons) {
   });
 }
 
-answer.addEventListener("input", () => {
-  answer.value = answer.value.replace(/\D/g, "");
-  answer.removeAttribute("aria-invalid");
+answerFields.addEventListener("focusin", (event) => {
+  selectAnswerDigit(answerDigits.indexOf(event.target));
+  event.target.select();
+});
+
+answerFields.addEventListener("click", (event) => {
+  if (answerDigits.includes(event.target)) event.target.select();
+});
+
+answerFields.addEventListener("input", (event) => {
+  const place = answerDigits.indexOf(event.target);
+  enterAnswerDigit(place, event.target.value.replace(/\D/g, "").slice(0, 1), true);
+});
+
+answerFields.addEventListener("keydown", (event) => {
+  if (event.target.readOnly || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+
+  const place = answerDigits.indexOf(event.target);
+  switch (event.key) {
+    case "Backspace":
+      eraseAnswerDigit(place, true);
+      break;
+    case "ArrowLeft":
+      selectAnswerDigit(place + 1, true);
+      break;
+    case "ArrowRight":
+      selectAnswerDigit(place - 1, true);
+      break;
+    default:
+      return;
+  }
+  event.preventDefault();
 });
 
 numberPad.addEventListener("click", (event) => {
   const button = event.target.closest("button");
   if (!button || numberPad.disabled) return;
 
+  const moveFocus = !touchPointer.matches && event.detail > 0;
   if (button.id === "erase") {
-    answer.value = answer.value.slice(0, -1);
-  } else if (answer.value.length < answer.maxLength) {
-    answer.value += button.dataset.digit;
+    eraseAnswerDigit(activePlace, moveFocus);
+  } else {
+    enterAnswerDigit(activePlace, button.dataset.digit, moveFocus);
   }
-  answer.removeAttribute("aria-invalid");
 });
 
 byId("answer-form").addEventListener("submit", checkAnswer);

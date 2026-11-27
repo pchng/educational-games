@@ -442,48 +442,59 @@ main { flex: 1; padding-block: 2.1rem 3rem; }
 
 .problem-label { display: block; margin-top: 1.35rem; color: var(--muted); font-weight: 800; }
 
+.answer-instructions { color: var(--muted); }
+
 .answer-entry {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: .85rem 1.25rem;
+  gap: .85rem 1rem;
   margin-top: .6rem;
 }
 
 .equation {
-  --digit-inset: .2em;
+  --place-width: clamp(2.95rem, 7vw, 3.5rem);
   display: grid;
   gap: .17em;
-  width: 5.4ch;
-  font: 700 clamp(2.4rem, 5vw, 3.35rem)/1.08 ui-monospace, Consolas, monospace;
+  font: 700 clamp(2.15rem, 5vw, 3.1rem)/1.08 ui-monospace, Consolas, monospace;
+}
+
+.equation-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--place-width);
+  justify-content: start;
+  direction: rtl;
+  text-align: center;
 }
 
 .equation-addends {
-  padding: 0 calc(var(--digit-inset) + 2px) .12em;
+  padding-bottom: .12em;
   border-bottom: 3px solid var(--green);
-  text-align: right;
 }
 
-.addition-sign {
-  margin-inline-end: .22em;
-  color: var(--green);
-}
+.addition-sign { color: var(--green); }
 
-#answer {
-  width: 100%;
-  min-height: 1.23em;
-  padding: 0 var(--digit-inset);
+.answer-digit {
+  width: calc(100% - .2rem);
+  min-width: 0;
+  min-height: max(3rem, 1.23em);
+  justify-self: center;
+  padding: 0;
   border: 2px solid #8eae8e;
   border-radius: .23em;
   background: #f0f7eb;
   color: var(--ink);
-  text-align: right;
+  direction: ltr;
+  text-align: center;
 }
 
-#answer[readonly] { background: #def1d6; border-color: #6fa66b; }
+.answer-digit.current-digit { border-color: var(--green); background: #e6f1db; }
+.answer-digit.carry-digit { border-style: dashed; }
+.answer-digit[readonly] { background: #def1d6; border-color: #6fa66b; }
 
 .number-pad {
-  flex: 1 1 10.5rem;
+  flex: 1 1 10rem;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: .38rem;
