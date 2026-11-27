@@ -85,6 +85,65 @@ h1[tabindex="-1"]:focus, #equation-text:focus { outline: none; }
   gap: 1rem;
 }
 
+.header-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: .5rem;
+}
+
+.sound-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 .65rem;
+  border: 1px solid #cbd9cb;
+  border-radius: 999px;
+  background: #edf4e6;
+  color: var(--green);
+  font-size: .94rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.sound-toggle[aria-pressed="false"] { background: var(--white); }
+.sound-toggle:hover { border-color: #7e9d86; }
+
+.sound-icon { position: relative; width: 1.15rem; height: 1.15rem; flex: none; }
+
+.sound-icon::before,
+.sound-icon::after {
+  content: "";
+  position: absolute;
+}
+
+.sound-icon::before {
+  inset: .15rem auto .15rem 0;
+  width: .67rem;
+  background: currentColor;
+  clip-path: polygon(0 32%, 35% 32%, 100% 0, 100% 100%, 35% 68%, 0 68%);
+}
+
+.sound-icon::after {
+  inset: .17rem .04rem .17rem auto;
+  width: .32rem;
+  border-right: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.sound-toggle[aria-pressed="false"] .sound-icon::after {
+  inset: 0 .35rem 0 auto;
+  width: 2px;
+  border: 0;
+  border-radius: 2px;
+  background: currentColor;
+  box-shadow: -2px 0 var(--white);
+  transform: rotate(-42deg);
+}
+
 .brand {
   display: inline-flex;
   align-items: center;
@@ -601,7 +660,8 @@ main { flex: 1; padding-block: 2.1rem 3rem; }
 
 @media (max-width: 37rem) {
   .wrap { width: calc(100% - 2rem); }
-  .header-inner { min-height: 61px; }
+  .header-inner { min-height: 61px; gap: .5rem; }
+  .sound-label { display: none; }
   main { padding-block: 1rem 2rem; }
   .hero { min-height: 23rem; align-items: flex-start; border-radius: 1.35rem; }
   .hero-copy { padding: 1.35rem; }
@@ -630,6 +690,7 @@ main { flex: 1; padding-block: 2.1rem 3rem; }
 }
 
 @media (max-width: 23rem) {
+  #star-unit { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .level-card { grid-template-columns: 1fr auto; }
   .level-art { display: none; }
   .level-name, .level-description, .level-example { grid-column: 1; }

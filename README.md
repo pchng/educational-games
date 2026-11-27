@@ -8,7 +8,7 @@ Wonder Patch is a collection of browser games for early learners. The first game
 | Medium | 10–99 | A mix of problems with and without carrying |
 | Hard | 100–999 | A mix of problems with and without carrying, including across several columns |
 
-Players can type an answer or use the on-screen number buttons. Hints show counting dots on Easy and place-value guidance on Medium and Hard. The browser saves stars and the current round for each level using local storage. Progress is specific to the browser and site address.
+Players can type an answer or use the on-screen number buttons. Hints show counting dots on Easy and place-value guidance on Medium and Hard. Correct answers and retries play short sound effects, which can be turned off in the header. The browser saves the sound setting, stars, and the current round for each level using local storage. Progress is specific to the browser and site address.
 
 ## Play locally
 

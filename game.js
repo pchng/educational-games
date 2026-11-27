@@ -19,12 +19,18 @@ const hintButton = byId("hint-toggle");
 const hintContent = byId("hint-content");
 const numberPad = byId("number-pad");
 const cheerCard = byId("cheer-card");
+const soundToggle = byId("sound-toggle");
+const feedbackSounds = {
+  correct: new Audio("./assets/correct.wav"),
+  retry: new Audio("./assets/try-again.wav"),
+};
 
 let progress = loadProgress();
 let activeLevel = null;
+let currentSound = null;
 
 function loadProgress() {
-  const progress = { stars: 0, rounds: {} };
+  const progress = { stars: 0, rounds: {}, soundEnabled: true };
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey));
     if (!saved || typeof saved !== "object") return progress;
@@ -32,6 +38,7 @@ function loadProgress() {
     if (Number.isSafeInteger(saved.stars) && saved.stars >= 0) {
       progress.stars = saved.stars;
     }
+    progress.soundEnabled = saved.soundEnabled !== false;
 
     for (const [key, level] of Object.entries(levels)) {
       const round = saved.rounds?.[key];
@@ -62,6 +69,22 @@ function saveProgress() {
   } catch {
     showStorageUnavailable();
   }
+}
+
+function updateSoundToggle() {
+  soundToggle.setAttribute("aria-pressed", String(progress.soundEnabled));
+  byId("sound-label").textContent = progress.soundEnabled ? "Sound on" : "Sound off";
+}
+
+function playFeedbackSound(effect) {
+  if (!progress.soundEnabled) return;
+
+  currentSound?.pause();
+  currentSound = feedbackSounds[effect];
+  currentSound.currentTime = 0;
+  currentSound.play().catch(() => {
+    // Visual feedback is already shown if the browser blocks audio playback.
+  });
 }
 
 function randomInt(min, max) {
@@ -259,6 +282,7 @@ function checkAnswer(event) {
     answer.value = "";
     answer.setAttribute("aria-invalid", "true");
     setFeedback("Try again!", "You can tap Show hint if you get stuck.", "try-again");
+    playFeedbackSound("retry");
     return;
   }
 
@@ -268,6 +292,7 @@ function checkAnswer(event) {
   updateStars();
   renderQuestion();
   setFeedback("Nice work!", "You earned a star.", "celebrate");
+  playFeedbackSound("correct");
   nextButton.focus({ preventScroll: true });
 }
 
@@ -321,10 +346,17 @@ numberPad.addEventListener("click", (event) => {
 byId("answer-form").addEventListener("submit", checkAnswer);
 hintButton.addEventListener("click", showHint);
 nextButton.addEventListener("click", nextQuestion);
+soundToggle.addEventListener("click", () => {
+  progress.soundEnabled = !progress.soundEnabled;
+  if (!progress.soundEnabled) currentSound?.pause();
+  updateSoundToggle();
+  saveProgress();
+});
 byId("play-again").addEventListener("click", () => {
   startRound(activeLevel);
   renderRoute(true);
 });
 
 window.addEventListener("hashchange", () => renderRoute(true));
+updateSoundToggle();
 renderRoute(false);
