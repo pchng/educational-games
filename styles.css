@@ -632,11 +632,15 @@ main { flex: 1; padding-block: 2.1rem 3rem; }
 .result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .65rem; margin-top: 1.15rem; }
 
 .site-footer {
+  display: grid;
+  gap: .45rem;
   padding: .9rem 0 1.2rem;
   border-top: 1px solid #e8e6d9;
   color: var(--muted);
   font-size: .875rem;
 }
+
+.site-disclaimer { max-width: 76ch; }
 
 .sr-only {
   position: absolute;

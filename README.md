@@ -1,5 +1,10 @@
 # Wonder Patch
 
+> [!WARNING]
+> **This entire repository is public.** Anyone can view the files and commit history on GitHub, including files outside the GitHub Pages publishing folder.
+>
+> **DO NOT commit sensitive or private information, including personally identifiable information (PII).** Keep passwords, API keys, private documents, and identifying details about children out of the repository.
+
 Wonder Patch is a collection of browser games for early learners. The first game, **Addition Adventure**, gives players five questions per round and one star for each correct answer.
 
 | Level | Addends | Carrying |
@@ -19,9 +24,5 @@ python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
 Browsers vary in how they handle local storage on `file:` URLs. The local server gives the game a consistent address for testing saved progress.
-
-## Publish with GitHub Pages
-
-Push the files to GitHub and choose **Settings → Pages → Deploy from a branch**. Select your branch and **/(root)**, then save. The app uses relative asset paths and runs without a build step. [GitHub Pages publishing documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
 
 All code, illustrations, and fonts are served with the site. The app uses no accounts, analytics, API keys, or external services.
