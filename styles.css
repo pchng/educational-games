@@ -68,7 +68,7 @@ h3 { font-size: 1.58rem; letter-spacing: -.02em; }
 
 :focus-visible { outline: 3px solid #7251a5; outline-offset: 4px; }
 
-h1[tabindex="-1"]:focus, #equation-text:focus { outline: none; }
+h1[tabindex="-1"]:focus, #equation-addends:focus { outline: none; }
 
 .wrap { width: min(70rem, calc(100% - 3rem)); margin-inline: auto; }
 
@@ -442,32 +442,48 @@ main { flex: 1; padding-block: 2.1rem 3rem; }
 
 .problem-label { display: block; margin-top: 1.35rem; color: var(--muted); font-weight: 800; }
 
-.equation {
+.answer-entry {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  gap: .6rem;
-  margin: .35rem 0 1.05rem;
-  font: 800 clamp(1.7rem, 4vw, 3.6rem)/1.15 var(--display);
-  letter-spacing: -.026em;
-  font-variant-numeric: tabular-nums;
+  align-items: center;
+  gap: .85rem 1.25rem;
+  margin-top: .6rem;
+}
+
+.equation {
+  --digit-inset: .2em;
+  display: grid;
+  gap: .17em;
+  width: 5.4ch;
+  font: 700 clamp(2.4rem, 5vw, 3.35rem)/1.08 ui-monospace, Consolas, monospace;
+}
+
+.equation-addends {
+  padding: 0 calc(var(--digit-inset) + 2px) .12em;
+  border-bottom: 3px solid var(--green);
+  text-align: right;
+}
+
+.addition-sign {
+  margin-inline-end: .22em;
+  color: var(--green);
 }
 
 #answer {
-  width: 4.4ch;
-  min-height: 1.45em;
-  padding: .04em .12em;
+  width: 100%;
+  min-height: 1.23em;
+  padding: 0 var(--digit-inset);
   border: 2px solid #8eae8e;
   border-radius: .23em;
   background: #f0f7eb;
   color: var(--ink);
-  text-align: center;
-  letter-spacing: inherit;
+  text-align: right;
 }
 
 #answer[readonly] { background: #def1d6; border-color: #6fa66b; }
 
 .number-pad {
+  flex: 1 1 10.5rem;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: .38rem;

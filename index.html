@@ -113,25 +113,31 @@
 
           <form id="answer-form" novalidate>
             <label class="problem-label" for="answer">What is the sum?</label>
-            <div class="equation">
-              <span id="equation-text" tabindex="-1"></span>
-              <input id="answer" name="answer" type="text" inputmode="numeric" maxlength="4"
-                autocomplete="off" spellcheck="false" aria-describedby="equation-text">
+            <div class="answer-entry">
+              <div class="equation">
+                <div class="equation-addends" id="equation-addends" role="img" aria-labelledby="equation-text" tabindex="-1">
+                  <span class="sr-only" id="equation-text"></span>
+                  <div id="top-addend" aria-hidden="true"></div>
+                  <div aria-hidden="true"><span class="addition-sign">+</span><span id="bottom-addend"></span></div>
+                </div>
+                <input id="answer" name="answer" type="text" inputmode="numeric" maxlength="4"
+                  autocomplete="off" spellcheck="false" aria-describedby="equation-text">
+              </div>
+              <fieldset id="number-pad" class="number-pad">
+                <legend class="sr-only">Number buttons</legend>
+                <button type="button" data-digit="1">1</button>
+                <button type="button" data-digit="2">2</button>
+                <button type="button" data-digit="3">3</button>
+                <button type="button" data-digit="4">4</button>
+                <button type="button" data-digit="5">5</button>
+                <button type="button" data-digit="6">6</button>
+                <button type="button" data-digit="7">7</button>
+                <button type="button" data-digit="8">8</button>
+                <button type="button" data-digit="9">9</button>
+                <button type="button" class="zero-key" data-digit="0">0</button>
+                <button type="button" class="erase-key" id="erase" aria-label="Erase last digit">⌫</button>
+              </fieldset>
             </div>
-            <fieldset id="number-pad" class="number-pad">
-              <legend class="sr-only">Number buttons</legend>
-              <button type="button" data-digit="1">1</button>
-              <button type="button" data-digit="2">2</button>
-              <button type="button" data-digit="3">3</button>
-              <button type="button" data-digit="4">4</button>
-              <button type="button" data-digit="5">5</button>
-              <button type="button" data-digit="6">6</button>
-              <button type="button" data-digit="7">7</button>
-              <button type="button" data-digit="8">8</button>
-              <button type="button" data-digit="9">9</button>
-              <button type="button" class="zero-key" data-digit="0">0</button>
-              <button type="button" class="erase-key" id="erase" aria-label="Erase last digit">⌫</button>
-            </fieldset>
             <div class="answer-actions">
               <button type="button" class="button button-outline" id="hint-toggle" aria-expanded="false" aria-controls="hint-content">Show hint</button>
               <button type="submit" class="button button-primary" id="check-answer">Check</button>

@@ -12,6 +12,7 @@ const byId = (id) => document.getElementById(id);
 const screens = ["games", "levels", "play", "result"].map((name) => byId(name + "-screen"));
 const levelButtons = [...document.querySelectorAll("[data-level]")];
 const progressDots = [...byId("round-dots").children];
+const equationAddends = byId("equation-addends");
 const answer = byId("answer");
 const checkButton = byId("check-answer");
 const nextButton = byId("next-question");
@@ -200,6 +201,8 @@ function renderQuestion() {
     dot.classList.toggle("current", index === round.index && !round.solved);
   });
   byId("equation-text").textContent = left + " + " + right + " =";
+  byId("top-addend").textContent = left;
+  byId("bottom-addend").textContent = right;
   answer.value = round.solved ? left + right : "";
   answer.readOnly = round.solved;
   answer.removeAttribute("aria-invalid");
@@ -250,8 +253,8 @@ function showHint() {
     hintContent.replaceChildren("Count " + left + " dots, then count " + right + " more.", dots);
   } else {
     const nextPlaces = activeLevel === "hard" ? " Next add the tens, then the hundreds." : " Next add the tens.";
-    hintContent.textContent = "Start with the ones. Add " + (left % 10) + " and " + (right % 10) +
-      ". If you make 10 or more, carry 1 to the tens." + nextPlaces;
+    hintContent.textContent = "Start with the ones on the right. Add " + (left % 10) + " and " + (right % 10) +
+      ". If you make 10 or more, carry 1 to the tens column on the left." + nextPlaces;
   }
   setHintOpen(true);
 }
@@ -308,11 +311,11 @@ function nextQuestion() {
     renderRoute(true);
   } else {
     renderQuestion();
-    byId("equation-text").scrollIntoView({ block: "nearest" });
+    equationAddends.scrollIntoView({ block: "nearest" });
     if (window.matchMedia("(pointer: fine)").matches) {
       answer.focus({ preventScroll: true });
     } else {
-      byId("equation-text").focus({ preventScroll: true });
+      equationAddends.focus({ preventScroll: true });
     }
   }
 }
