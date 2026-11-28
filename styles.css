@@ -900,3 +900,17 @@ main { flex: 1; padding-block: 2.1rem 3rem; }
     transition-duration: .001ms !important;
   }
 }
+
+.math-art { background: #f7e4bd; }
+.math-art img { object-fit: contain; }
+.math-card { max-width: 46rem; }
+.math-story { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.math-story h2 { font-size: clamp(1.25rem, 3vw, 1.8rem); line-height: 1.4; }
+#math-picture { font-size: clamp(2rem, 7vw, 4rem); }
+.math-equation { display: flex; align-items: center; gap: clamp(.25rem, 2vw, .8rem); margin: 1rem 0; font-size: 1.7rem; }
+.math-equation input, .math-equation select {
+  width: clamp(2.65rem, 11vw, 4.2rem); height: 3.5rem; border: 2px solid #81a18a;
+  border-radius: .7rem; background: #f5faef; color: inherit; font: inherit; text-align: center;
+}
+#math-form { margin-top: 1rem; }
+#math-feedback:not(:empty) { margin-top: 1rem; font-weight: 700; }

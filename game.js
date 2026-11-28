@@ -2,7 +2,7 @@
 
 const storageKey = "wonder-patch.v1";
 const byId = (id) => document.getElementById(id);
-const screens = ["games", "levels", "steps", "play", "result"].map((name) => byId(name + "-screen"));
+const screens = ["games", "story-math", "levels", "steps", "play", "result"].map((name) => byId(name + "-screen"));
 const levelButtons = [...document.querySelectorAll("[data-level]")];
 const progressDots = [...byId("round-dots").children];
 const equation = byId("equation");
@@ -167,6 +167,12 @@ function renderRoute(focusHeading) {
   activeStep = "";
   readAloud.stop();
   updateStars();
+
+  if (game === "story-math") {
+    storyMath.start();
+    showScreen("story-math", focusHeading);
+    return;
+  }
 
   if (game !== "addition") {
     showScreen("games", focusHeading);
@@ -559,6 +565,12 @@ soundToggle.addEventListener("click", () => {
 byId("play-again").addEventListener("click", () => {
   startRound(activeLevel, activeStep);
   renderRoute(true);
+});
+
+const storyMath = createStoryMath(byId, readAloud, playFeedbackSound, () => {
+  progress.stars++;
+  saveProgress();
+  updateStars();
 });
 
 window.addEventListener("hashchange", () => renderRoute(true));
