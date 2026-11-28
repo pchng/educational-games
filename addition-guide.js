@@ -21,7 +21,7 @@ function guideButton(text, action) {
   return button;
 }
 
-function buildAdditionHint(container, columns) {
+function buildAdditionHint(container, columns, onStepChange) {
   const lastAddendPlace = columns.length - 2;
   const lastStep = columns.at(-1).incoming ? lastAddendPlace + 1 : lastAddendPlace;
   let place = 0;
@@ -84,7 +84,7 @@ function buildAdditionHint(container, columns) {
       takeaway.textContent = "Ten " + name + " made 1 " + placeUnits[place + 1] +
         ". Write how many " + name + " are left below the line. Put 1 above the " + nextName + " if it helps.";
     } else if (column.carry) {
-      takeaway.textContent = "You have enough to trade ten " + name + " for 1 " + placeUnits[place + 1] + ".";
+      takeaway.textContent = "Tap Trade 10 " + name + " to make 1 " + placeUnits[place + 1] + ".";
     } else {
       takeaway.textContent = "Count the pieces and write that digit below the line.";
       takeaway.hidden = place > lastAddendPlace;
@@ -102,6 +102,9 @@ function buildAdditionHint(container, columns) {
       actions.append(guideButton("Next column", () => changeStep(place + 1)));
     }
     actions.hidden = !actions.childElementCount;
+    onStepChange();
+    container.dataset.spoken = title.textContent + ". " + instruction.textContent +
+      (takeaway.hidden ? "" : " " + takeaway.textContent);
     container.replaceChildren(title, instruction, board, takeaway, actions);
     if (moveFocus) {
       if (traded) {

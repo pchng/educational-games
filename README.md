@@ -15,7 +15,9 @@ Wonder Patch is a collection of browser games for early learners. The first game
 
 Players can type or tap the on-screen number buttons, starting with the ones on the right. Optional carry boxes sit above the columns. Hints let players trade ten pieces for one in the next column, and retries highlight the first column to check.
 
-Choose **Practice steps** under a difficulty to focus on a skill, such as making 10 or carrying from the ones. Each new round ends with an illustrated Fox story challenge with a **Read aloud** button that plays bundled narration. The browser saves the sound setting, stars, in-progress rounds, and current work for each practice step. Progress is specific to the browser and site address.
+Choose **Practice steps** under a difficulty to focus on a skill, such as making 10 or carrying from the ones. Each new round ends with an illustrated Fox story challenge. Read-aloud buttons speak stories, problems, hint steps, and retry clues using an on-device English voice when available. Fox stories also have bundled recordings as a fallback.
+
+The browser saves the sound setting, stars, in-progress rounds, and current work for each practice step. Progress is specific to the browser and site address.
 
 ## Play locally
 

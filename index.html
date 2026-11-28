@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="./styles.css">
   <script src="./addition.js" defer></script>
   <script src="./addition-guide.js" defer></script>
+  <script src="./read-aloud.js" defer></script>
   <script src="./game.js" defer></script>
 </head>
 <body>
@@ -136,18 +137,22 @@
               <div class="story-copy">
                 <h2 id="story-title">Fox’s story challenge</h2>
                 <p id="story-text"></p>
-                <button class="button button-outline" id="read-story" type="button">Read aloud</button>
-                <p id="story-audio-status" role="status"></p>
+                <button class="button button-outline read-control" id="read-story" type="button">Read aloud</button>
+                <p class="read-status" id="story-audio-status" role="status"></p>
               </div>
               <div class="story-picture" aria-hidden="true">
                 <img src="./assets/fox.webp" alt="" width="576" height="576">
                 <div class="story-groups" id="story-groups"></div>
               </div>
             </section>
-            <p class="problem-label" id="answer-label">What is the sum?</p>
+            <div class="problem-heading">
+              <p class="problem-label" id="answer-label">What is the sum?</p>
+              <button class="button button-outline read-control" id="read-problem" type="button">Read problem</button>
+            </div>
             <p class="answer-instructions" id="answer-instructions">
               Start with the ones box on the right. Leave the extra box on the left empty if you don’t need it.
             </p>
+            <p class="read-status" id="problem-audio-status" role="status"></p>
             <div class="answer-entry">
               <div class="equation" id="equation">
                 <div class="carry-work">
@@ -194,13 +199,21 @@
                 <button type="button" class="erase-key" id="erase" aria-label="Erase last digit">⌫</button>
               </fieldset>
             </div>
-            <p class="column-clue" id="column-clue" role="status" hidden></p>
+            <div class="column-clue" id="column-clue-panel" hidden>
+              <p id="column-clue" role="status"></p>
+              <button class="button button-outline read-control" id="read-clue" type="button">Read clue</button>
+              <p class="read-status" id="clue-audio-status" role="status"></p>
+            </div>
             <div class="answer-actions">
               <button type="button" class="button button-outline" id="hint-toggle" aria-expanded="false" aria-controls="hint-content">Show hint</button>
               <button type="submit" class="button button-primary" id="check-answer">Check</button>
               <button type="button" class="button button-primary" id="next-question" hidden>Next question</button>
             </div>
-            <div class="hint" id="hint-content" hidden></div>
+            <div class="hint" id="hint-content" hidden>
+              <button class="button button-outline read-control" id="read-hint" type="button">Read hint</button>
+              <p class="read-status" id="hint-audio-status" role="status"></p>
+              <div class="hint-step" id="hint-step"></div>
+            </div>
           </form>
         </div>
 

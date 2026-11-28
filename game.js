@@ -11,18 +11,21 @@ const answerFields = byId("answer-fields");
 const answerDigits = [...answerFields.querySelectorAll("input")];
 const carryNotes = [...byId("carry-fields").querySelectorAll("input")];
 const columnClue = byId("column-clue");
+const columnCluePanel = byId("column-clue-panel");
 const touchPointer = window.matchMedia("(pointer: coarse)");
 const checkButton = byId("check-answer");
 const nextButton = byId("next-question");
 const hintButton = byId("hint-toggle");
 const hintContent = byId("hint-content");
+const hintStep = byId("hint-step");
 const numberPad = byId("number-pad");
 const cheerCard = byId("cheer-card");
 const soundToggle = byId("sound-toggle");
 const foxStory = byId("fox-story");
 const readStoryButton = byId("read-story");
-const storyAudio = new Audio();
-storyAudio.preload = "none";
+const readProblemButton = byId("read-problem");
+const readHintButton = byId("read-hint");
+const readClueButton = byId("read-clue");
 const feedbackSounds = {
   correct: new Audio("./assets/correct.wav"),
   retry: new Audio("./assets/try-again.wav"),
@@ -33,6 +36,7 @@ let activeLevel = null;
 let activeStep = "";
 let activeDigit = answerDigits[0];
 let currentSound = null;
+const readAloud = createReadAloud(() => currentSound?.pause());
 
 function practiceKey(level, step) {
   return step ? level + "/" + step : level;
@@ -161,7 +165,7 @@ function renderRoute(focusHeading) {
   const [game, levelKey, stepKey] = window.location.hash.slice(1).split("/");
   activeLevel = null;
   activeStep = "";
-  stopStoryReading();
+  readAloud.stop();
   updateStars();
 
   if (game !== "addition") {
@@ -252,7 +256,8 @@ function saveWork() {
 }
 
 function clearColumnClue() {
-  columnClue.hidden = true;
+  resetReading(readClueButton, "clue-audio-status");
+  columnCluePanel.hidden = true;
   columnClue.textContent = "";
   answerFields.querySelector(".needs-review")?.classList.remove("needs-review");
   answerFields.removeAttribute("aria-invalid");
@@ -262,7 +267,7 @@ function markColumn(place, clue, moveFocus, incorrect = false) {
   clearColumnClue();
   if (incorrect) answerFields.setAttribute("aria-invalid", "true");
   answerDigits[place].classList.add("needs-review");
-  columnClue.hidden = false;
+  columnCluePanel.hidden = false;
   columnClue.textContent = clue;
   selectAnswerDigit(place, moveFocus);
 }
@@ -294,6 +299,8 @@ function eraseDigit(field, moveFocus) {
 }
 
 function renderQuestion() {
+  readAloud.stop();
+  byId("problem-audio-status").textContent = "";
   const round = currentRound();
   const [left, right] = round.problems[round.index];
   const questionNumber = round.index + 1;
@@ -327,7 +334,7 @@ function renderQuestion() {
   nextButton.hidden = !round.solved;
   nextButton.textContent = questionNumber === roundLength ? "See your stars" : "Next question";
   hintButton.hidden = round.solved;
-  hintContent.replaceChildren();
+  hintStep.replaceChildren();
   setHintOpen(false);
 
   if (round.solved) {
@@ -338,6 +345,7 @@ function renderQuestion() {
 }
 
 function setHintOpen(open) {
+  if (!open) resetReading(readHintButton, "hint-audio-status");
   hintContent.hidden = !open;
   hintButton.textContent = open ? "Hide hint" : "Show hint";
   hintButton.setAttribute("aria-expanded", String(open));
@@ -349,48 +357,33 @@ function showHint() {
     return;
   }
 
-  if (!hintContent.childElementCount) {
+  if (!hintStep.childElementCount) {
     const round = currentRound();
-    buildAdditionHint(hintContent, columnWork(...round.problems[round.index]));
+    buildAdditionHint(hintStep, columnWork(...round.problems[round.index]), () => {
+      resetReading(readHintButton, "hint-audio-status");
+    });
   }
   setHintOpen(true);
   hintContent.scrollIntoView({ block: "nearest" });
 }
 
-function stopStoryReading() {
-  storyAudio.pause();
-  storyAudio.currentTime = 0;
-  readStoryButton.textContent = "Read aloud";
+function resetReading(button, statusId) {
+  readAloud.stop(button);
+  byId(statusId).textContent = "";
 }
 
 function renderStory(round, left, right) {
-  stopStoryReading();
   const story = round.index === roundLength - 1 ? getStory(activeLevel, round.story) : null;
   const showStory = story?.pair[0] === left && story.pair[1] === right;
   foxStory.hidden = !showStory;
+  readProblemButton.hidden = showStory;
   answerDigits[0].setAttribute("aria-describedby", showStory ? "story-text equation-text" : "equation-text");
   if (!showStory) return;
 
   byId("story-text").textContent = story.text;
   byId("story-audio-status").textContent = "";
   byId("story-groups").replaceChildren(makeStoryGroup(left, story.item), makeStoryGroup(right, story.item));
-  if (storyAudio.getAttribute("src") !== story.audio) storyAudio.src = story.audio;
-}
-
-function toggleStoryReading() {
-  if (!storyAudio.paused) {
-    stopStoryReading();
-    return;
-  }
-
-  currentSound?.pause();
-  byId("story-audio-status").textContent = "";
-  readStoryButton.textContent = "Stop reading";
-  storyAudio.play().catch((error) => {
-    if (error.name === "AbortError") return;
-    stopStoryReading();
-    byId("story-audio-status").textContent = "The story audio couldn’t play. Tap Read aloud to try again.";
-  });
+  readStoryButton.dataset.recording = story.audio;
 }
 
 function setFeedback(title, message, animation) {
@@ -409,7 +402,7 @@ function checkAnswer(event) {
   const round = currentRound();
   if (!round || round.solved || round.index >= roundLength) return;
 
-  stopStoryReading();
+  readAloud.stop();
   const [left, right] = round.problems[round.index];
   const requiredPlaces = String(left).length;
   const missingPlace = answerDigits.findIndex((digit, place) => place < requiredPlaces && !digit.value);
@@ -540,8 +533,23 @@ numberPad.addEventListener("click", (event) => {
 byId("answer-form").addEventListener("submit", checkAnswer);
 hintButton.addEventListener("click", showHint);
 nextButton.addEventListener("click", nextQuestion);
-readStoryButton.addEventListener("click", toggleStoryReading);
-storyAudio.addEventListener("ended", stopStoryReading);
+readStoryButton.addEventListener("click", () => {
+  readAloud.toggle(readStoryButton, byId("story-audio-status"), byId("story-text").textContent,
+    readStoryButton.dataset.recording);
+});
+readProblemButton.addEventListener("click", () => {
+  const round = currentRound();
+  const [left, right] = round.problems[round.index];
+  const instructions = byId("answer-instructions").textContent.trim();
+  const text = "What is " + left + " plus " + right + "? " + instructions;
+  readAloud.toggle(readProblemButton, byId("problem-audio-status"), text);
+});
+readHintButton.addEventListener("click", () => {
+  readAloud.toggle(readHintButton, byId("hint-audio-status"), hintStep.dataset.spoken);
+});
+readClueButton.addEventListener("click", () => {
+  readAloud.toggle(readClueButton, byId("clue-audio-status"), columnClue.textContent);
+});
 soundToggle.addEventListener("click", () => {
   progress.soundEnabled = !progress.soundEnabled;
   if (!progress.soundEnabled) currentSound?.pause();

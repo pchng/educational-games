@@ -451,9 +451,21 @@ main { flex: 1; padding-block: 2.1rem 3rem; }
 .round-dots .current { border: 2px solid #418352; background: white; }
 .round-dots .solved { border-color: #418352; background: #418352; }
 
-.problem-label { display: block; margin-top: 1.35rem; color: var(--muted); font-weight: 800; }
+.problem-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .35rem .75rem;
+  justify-content: space-between;
+  margin-top: 1.35rem;
+}
+
+.problem-label { color: var(--muted); font-weight: 800; }
 
 .answer-instructions { color: var(--muted); }
+
+.read-control { min-height: 44px; padding: .45rem .75rem; font-size: .94rem; }
+.read-status:not(:empty) { margin-top: .4rem; color: var(--muted); font-size: .94rem; }
 
 .fox-story {
   display: grid;
@@ -470,7 +482,7 @@ main { flex: 1; padding-block: 2.1rem 3rem; }
 .story-copy h2 { font-size: 1.4rem; line-height: 1.12; }
 .story-copy p { margin-top: .4rem; }
 .story-copy .button { margin-top: .65rem; padding-inline: .85rem; }
-#story-audio-status:empty { display: none; }
+.story-copy .read-status:empty { margin: 0; }
 
 .story-picture { display: grid; justify-items: center; }
 .story-picture img { width: 6.7rem; height: auto; }
@@ -580,6 +592,8 @@ main { flex: 1; padding-block: 2.1rem 3rem; }
   font-weight: 800;
 }
 
+.column-clue .read-control { margin-top: .4rem; }
+
 .number-pad {
   flex: 1 1 10rem;
   display: grid;
@@ -618,6 +632,10 @@ main { flex: 1; padding-block: 2.1rem 3rem; }
   color: #5a421b;
   font-weight: 700;
 }
+
+.hint > .read-control { justify-self: start; }
+.hint .read-status:empty { display: none; }
+.hint-step { display: grid; gap: .45rem; }
 
 .guide-title { font: 800 1.24rem/1.1 var(--display); }
 
