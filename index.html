@@ -8,6 +8,8 @@
   <title>Wonder Patch</title>
   <link rel="icon" href="./assets/fox.webp" type="image/webp">
   <link rel="stylesheet" href="./styles.css">
+  <script src="./addition.js" defer></script>
+  <script src="./addition-guide.js" defer></script>
   <script src="./game.js" defer></script>
 </head>
 <body>
@@ -71,32 +73,50 @@
       </div>
 
       <div class="level-grid">
-        <button class="level-card level-easy" type="button" data-level="easy">
-          <span class="level-art" aria-hidden="true"><span>6</span><span>7</span></span>
-          <span class="level-name">Easy</span>
-          <span class="level-description">One-digit numbers</span>
-          <span class="level-example">6 + 7</span>
-          <span class="level-action">Start</span>
-        </button>
-        <button class="level-card level-medium" type="button" data-level="medium">
-          <span class="level-art" aria-hidden="true"><span>13</span><span>18</span></span>
-          <span class="level-name">Medium</span>
-          <span class="level-description">Two-digit numbers</span>
-          <span class="level-example">13 + 18</span>
-          <span class="level-action">Start</span>
-        </button>
-        <button class="level-card level-hard" type="button" data-level="hard">
-          <span class="level-art" aria-hidden="true"><span>132</span><span>245</span></span>
-          <span class="level-name">Hard</span>
-          <span class="level-description">Three-digit numbers</span>
-          <span class="level-example">132 + 245</span>
-          <span class="level-action">Start</span>
-        </button>
+        <div class="level-option">
+          <button class="level-card level-easy" type="button" data-level="easy">
+            <span class="level-art" aria-hidden="true"><span>6</span><span>7</span></span>
+            <span class="level-name">Easy</span>
+            <span class="level-description">One-digit numbers</span>
+            <span class="level-example">6 + 7</span>
+            <span class="level-action">Start</span>
+          </button>
+          <a class="text-link" href="#addition/easy/steps" aria-label="Easy practice steps">Practice steps</a>
+        </div>
+        <div class="level-option">
+          <button class="level-card level-medium" type="button" data-level="medium">
+            <span class="level-art" aria-hidden="true"><span>13</span><span>18</span></span>
+            <span class="level-name">Medium</span>
+            <span class="level-description">Two-digit numbers</span>
+            <span class="level-example">13 + 18</span>
+            <span class="level-action">Start</span>
+          </button>
+          <a class="text-link" href="#addition/medium/steps" aria-label="Medium practice steps">Practice steps</a>
+        </div>
+        <div class="level-option">
+          <button class="level-card level-hard" type="button" data-level="hard">
+            <span class="level-art" aria-hidden="true"><span>132</span><span>245</span></span>
+            <span class="level-name">Hard</span>
+            <span class="level-description">Three-digit numbers</span>
+            <span class="level-example">132 + 245</span>
+            <span class="level-action">Start</span>
+          </button>
+          <a class="text-link" href="#addition/hard/steps" aria-label="Hard practice steps">Practice steps</a>
+        </div>
       </div>
     </section>
 
-    <section id="play-screen" class="inner-screen" aria-labelledby="play-title" hidden>
+    <section id="steps-screen" class="inner-screen" aria-labelledby="steps-title" hidden>
       <a class="text-link" href="#addition">Pick a level</a>
+      <div class="play-heading">
+        <h1 id="steps-title" tabindex="-1">Practice steps</h1>
+        <span class="level-tag" id="steps-level"></span>
+      </div>
+      <div class="practice-grid" id="practice-options"></div>
+    </section>
+
+    <section id="play-screen" class="inner-screen" aria-labelledby="play-title" hidden>
+      <a class="text-link" id="play-back" href="#addition">Pick a level</a>
       <div class="play-heading">
         <h1 id="play-title" tabindex="-1">Addition Adventure</h1>
         <span class="level-tag" id="current-level"></span>
@@ -112,12 +132,36 @@
           </div>
 
           <form id="answer-form" novalidate>
+            <section class="fox-story" id="fox-story" aria-labelledby="story-title" hidden>
+              <div class="story-copy">
+                <h2 id="story-title">Fox’s story challenge</h2>
+                <p id="story-text"></p>
+                <button class="button button-outline" id="read-story" type="button">Read aloud</button>
+                <p id="story-audio-status" role="status"></p>
+              </div>
+              <div class="story-picture" aria-hidden="true">
+                <img src="./assets/fox.webp" alt="" width="576" height="576">
+                <div class="story-groups" id="story-groups"></div>
+              </div>
+            </section>
             <p class="problem-label" id="answer-label">What is the sum?</p>
             <p class="answer-instructions" id="answer-instructions">
               Start with the ones box on the right. Leave the extra box on the left empty if you don’t need it.
             </p>
             <div class="answer-entry">
-              <div class="equation">
+              <div class="equation" id="equation">
+                <div class="carry-work">
+                  <p class="carry-label" id="carry-label">Carry notes <span>(optional)</span></p>
+                  <div class="equation-row" id="carry-fields" role="group" aria-labelledby="carry-label">
+                    <span aria-hidden="true"></span>
+                    <input class="carry-note" type="text" inputmode="numeric" maxlength="1"
+                      aria-label="Carry into tens" autocomplete="off">
+                    <input class="carry-note" type="text" inputmode="numeric" maxlength="1"
+                      aria-label="Carry into hundreds" autocomplete="off" hidden>
+                    <input class="carry-note" type="text" inputmode="numeric" maxlength="1"
+                      aria-label="Carry into thousands" autocomplete="off" hidden>
+                  </div>
+                </div>
                 <div class="equation-addends" id="equation-addends" role="img" aria-labelledby="equation-text" tabindex="-1">
                   <span class="sr-only" id="equation-text"></span>
                   <div class="equation-row" id="top-addend" aria-hidden="true"></div>
@@ -150,6 +194,7 @@
                 <button type="button" class="erase-key" id="erase" aria-label="Erase last digit">⌫</button>
               </fieldset>
             </div>
+            <p class="column-clue" id="column-clue" role="status" hidden></p>
             <div class="answer-actions">
               <button type="button" class="button button-outline" id="hint-toggle" aria-expanded="false" aria-controls="hint-content">Show hint</button>
               <button type="submit" class="button button-primary" id="check-answer">Check</button>
@@ -171,7 +216,7 @@
     </section>
 
     <section id="result-screen" class="inner-screen result-screen" aria-labelledby="result-title" hidden>
-      <a class="text-link" href="#addition">Pick a level</a>
+      <a class="text-link" id="result-back" href="#addition">Pick a level</a>
       <div class="result-card">
         <div class="result-art" aria-hidden="true"></div>
         <div class="result-copy">
