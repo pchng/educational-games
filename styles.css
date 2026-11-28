@@ -914,3 +914,18 @@ main { flex: 1; padding-block: 2.1rem 3rem; }
 }
 #math-form { margin-top: 1rem; }
 #math-feedback:not(:empty) { margin-top: 1rem; font-weight: 700; }
+
+#math-signs { display: flex; border: 0; margin: 0; padding: 0; gap: .15rem; }
+#math-signs label { position: relative; cursor: pointer; }
+#math-signs input { position: absolute; opacity: 0; inset: 0; margin: 0; width: 100%; height: 100%; cursor: pointer; }
+#math-signs span, .counter-group button {
+  display: grid; place-items: center; min-width: 2.75rem; min-height: 2.75rem;
+  border: 2px solid #81a18a; border-radius: .65rem; background: #fff;
+}
+#math-signs input:checked + span, .math-equation input.selected { background: #dcf3db; border-color: #256540; box-shadow: inset 0 0 0 1px #256540; }
+#math-signs input:focus-visible + span { outline: 3px solid #304db0; }
+#math-pad { width: min(100%, 13rem); margin: 0 0 1rem; }
+.math-story { margin-top: 1rem; }
+.counter-group { display: inline-flex; flex-wrap: wrap; gap: .25rem; padding: .5rem; margin: .4rem; background: #f5ebd9; border-radius: .75rem; }
+.counter-group button { font-size: 1.45rem; cursor: pointer; }
+.counter-group button[aria-pressed="true"] { opacity: .48; text-decoration: line-through; background: #d2decf; }

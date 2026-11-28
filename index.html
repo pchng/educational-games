@@ -56,7 +56,7 @@
               <div class="game-card-copy">
                 <h3 id="addition-title">Addition Adventure</h3>
                 <p>Add numbers from one to three digits.</p>
-                <span class="button button-primary" id="addition-action">Play game</span>
+                <span class="button button-primary" id="addition-action">Play column addition</span>
               </div>
             </a>
           </li>
@@ -76,30 +76,44 @@
 
     <section id="story-math-screen" class="inner-screen" aria-labelledby="math-heading" hidden>
       <a class="text-link" href="#games">All games</a>
-      <div class="play-heading"><h1 id="math-heading" tabindex="-1">Story Math</h1></div>
+      <div class="play-heading"><h1 id="math-heading" tabindex="-1">Story Math</h1>
+        <a class="text-link" id="math-columns" href="#addition" hidden>Column practice</a>
+      </div>
       <div class="problem-card math-card">
+        <div class="round-progress"><span id="math-count"></span>
+          <div id="math-dots" class="round-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
         <div class="math-story">
           <span id="math-picture" aria-hidden="true"></span>
           <h2 id="math-story" tabindex="-1"></h2>
         </div>
         <button type="button" class="button button-outline" id="math-read">Read aloud</button>
         <p class="read-status" id="math-audio" role="status"></p>
-        <form id="math-form">
-          <p>Fill in the numbers, choose a sign, and write your answer.</p>
+        <form id="math-form" novalidate>
+          <p id="math-instructions"></p>
           <div class="math-equation">
-            <input name="first" aria-label="First number" placeholder="?" required inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off">
-            <select name="sign" aria-label="Choose plus or minus" required>
-              <option value="">?</option><option value="+">+</option><option value="-">−</option>
-            </select>
-            <input name="second" aria-label="Second number" placeholder="?" required inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off">
-            <span>=</span>
-            <input name="result" aria-label="Answer" placeholder="?" required inputmode="numeric" maxlength="2" pattern="[0-9]{1,2}" autocomplete="off">
+            <input name="first" aria-label="First number" placeholder="?" maxlength="1" autocomplete="off">
+            <fieldset id="math-signs"><legend class="sr-only">Choose a sign</legend>
+              <label><input type="radio" name="sign" value="+" aria-label="Plus"><span>+</span></label>
+              <label><input type="radio" name="sign" value="-" aria-label="Minus"><span>−</span></label>
+            </fieldset>
+            <input name="second" aria-label="Second number" placeholder="?" maxlength="1" autocomplete="off">
+            <span id="math-equals">=</span>
+            <input name="result" aria-label="Answer" placeholder="?" maxlength="2" autocomplete="off">
           </div>
+          <div id="math-pad-slot"></div>
           <button class="button button-primary" id="math-check">Check answer</button>
-          <button type="button" class="button button-outline" id="math-hint">Get a hint</button>
+          <button type="button" class="button button-outline" id="math-hint">Show hint</button>
+          <p id="math-feedback" role="status"></p>
+          <button class="button button-outline" type="button" id="math-read-help" hidden>Read clue</button>
+          <div id="math-tray" hidden></div>
           <button type="button" class="button button-primary" id="math-next" hidden>Next story</button>
         </form>
-        <p id="math-feedback" role="status"></p>
+        <div id="math-finish" hidden>
+          <button class="button button-primary" data-limit="5">Play within 5</button>
+          <button class="button button-primary" data-limit="10">Play within 10</button>
+          <button class="button button-outline" data-limit="18">Try bigger numbers</button>
+        </div>
       </div>
     </section>
 
@@ -108,7 +122,8 @@
       <div class="level-intro">
         <div>
           <h1 id="levels-title" tabindex="-1">Addition<br>Adventure</h1>
-          <p>Pick a level to start adding.</p>
+          <p>Pick a level to practice adding in columns.</p>
+          <a class="text-link" href="#addition/start">Try a beginner round within 5</a>
         </div>
         <img src="./assets/addition.webp" alt="" width="960" height="480">
       </div>

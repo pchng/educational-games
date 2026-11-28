@@ -5,7 +5,9 @@
 >
 > **DO NOT commit sensitive or private information, including personally identifiable information (PII).** Keep passwords, API keys, private documents, and identifying details about children out of the repository.
 
-Wonder Patch is a collection of browser games for early learners. The first game, **Addition Adventure**, gives players five questions per round and one star for each correct answer.
+Wonder Patch is a collection of browser games for early learners. **Story Math** and the optional beginner rounds in **Addition Adventure** start with three questions within 5. Children earn a star for each answer, then choose another round within 5, within 10, or with bigger numbers. Story Math asks children to build the whole equation. Its optional hints include tappable pictures and read-aloud clues.
+
+Choose **Play column addition** on the game picker to open these Addition Adventure levels. Each column round has five questions.
 
 | Level | Addends | Carrying |
 | --- | --- | --- |

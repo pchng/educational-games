@@ -168,8 +168,8 @@ function renderRoute(focusHeading) {
   readAloud.stop();
   updateStars();
 
-  if (game === "story-math") {
-    storyMath.start();
+  if (game === "story-math" || (game === "addition" && levelKey === "start")) {
+    storyMath.start(game === "story-math");
     showScreen("story-math", focusHeading);
     return;
   }
